@@ -54,33 +54,27 @@ Elige una opción:
 
 ## Confirmaciones de sí/no
 
-Las preguntas que se responden con sí o no (eliminar una nota, actualizar calificaciones, activar o desactivar la contraseña) usan una función `confirmar()` que reconoce varias formas de escribir "sí": `y`, `yes`, `s`, `si`, `sí` (con o sin tilde, mayúsculas o minúsculas). Cualquier otra respuesta se toma como "no".
-
-## Notas de categoría "Calificaciones"
-
-Si al agregar o editar una nota se usa la categoría `Calificaciones`, el programa pide una lista de calificaciones separadas por coma y calcula automáticamente el promedio y si está aprobado (promedio mayor o igual a 70).
+Las preguntas que se responden con sí o no (eliminar una nota, activar o desactivar la contraseña) usan una función `confirmar()` que reconoce varias formas de escribir "sí": `y`, `yes`, `s`, `si`, `sí` (con o sin tilde, mayúsculas o minúsculas). Cualquier otra respuesta se toma como "no".
 
 ## Ejemplo de uso
 
-**Agregar una nota de calificaciones:**
+**Agregar una nota:**
 
 ```
 Elige una opción: 1
-Título: Parcial de Python
-Contenido:
-Categoría (Enter para 'General'): Calificaciones
-Calificaciones separadas por coma: 85, 62, 91, 55
-[OK] Nota agregada con id 3
+Título: Repasar Git
+Contenido: Revisar comandos add, commit y push
+Categoría (Enter para 'General'): Escuela
+[OK] Nota agregada con id 2
 ```
 
 **Listar notas:**
 
 ```
 Elige una opción: 4
-[1] Compras del super  (Hogar) - 2026-08-28 22:07:58
-[2] Repasar Git  (Escuela) - 2026-08-28 22:07:58
-[3] Parcial de Python  (Calificaciones) - 2026-08-28 22:07:58
-     Promedio: 73.25  -> Aprobado
+[1] Compras del super  (Hogar) - 2026-08-28 23:44:09
+[2] Repasar Git  (Escuela) - 2026-08-28 23:44:09
+[3] Ideas para el proyecto  (Trabajo) - 2026-08-28 23:44:09
 ```
 
 **Buscar por palabra clave o categoría:**
@@ -95,16 +89,21 @@ Palabra clave o categoría: escuela
 
 ```
 Elige una opción: 6
-Total de notas: 4
+Total de notas: 3
 
 Notas por categoría:
   Hogar: 1
   Escuela: 1
-  Calificaciones: 2
+  Trabajo: 1
+```
 
-Notas de calificaciones: 2
-  Aprobadas: 1
-  Reprobadas: 1
+**Eliminar una nota (usando la confirmación):**
+
+```
+Elige una opción: 3
+Id de la nota: 2
+¿Eliminar 'Repasar Git'? (s/n): sí
+[OK] Nota eliminada.
 ```
 
 **Activar/desactivar contraseña:**
@@ -118,7 +117,7 @@ La contraseña de inicio está activada.
 
 ## Estructura de una nota
 
-Cada nota se guarda como un diccionario dentro de `notas.json`. Una nota normal:
+Cada nota se guarda como un diccionario dentro de `notas.json`:
 
 ```json
 {
@@ -126,22 +125,7 @@ Cada nota se guarda como un diccionario dentro de `notas.json`. Una nota normal:
     "titulo": "Repasar Git",
     "contenido": "Revisar comandos add, commit y push",
     "categoria": "Escuela",
-    "fecha_creacion": "2026-08-28 22:07:58"
-}
-```
-
-Una nota de calificaciones incluye además `calificaciones`, `promedio` y `aprobado`:
-
-```json
-{
-    "id": 3,
-    "titulo": "Parcial de Python",
-    "contenido": "",
-    "categoria": "Calificaciones",
-    "fecha_creacion": "2026-08-28 22:07:58",
-    "calificaciones": [85.0, 62.0, 91.0, 55.0],
-    "promedio": 73.25,
-    "aprobado": true
+    "fecha_creacion": "2026-08-28 23:44:09"
 }
 ```
 
@@ -153,7 +137,6 @@ Una nota de calificaciones incluye además `calificaciones`, `promedio` y `aprob
 - Si `config.json` está corrupto, se avisa y se continúa con valores por defecto.
 - Si se ingresa un id no numérico o una opción de menú inválida, se muestra un mensaje y se vuelve a mostrar el menú sin cerrar el programa.
 - Si se ingresa una contraseña incorrecta 3 veces, el programa termina sin dar acceso.
-- Si se escribe una calificación que no es un número, se omite y se avisa cuál fue.
 
 ## Git y privacidad de las notas
 
