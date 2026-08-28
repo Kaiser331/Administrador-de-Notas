@@ -11,8 +11,6 @@ LINEA = "─" * 42
 CONTRASEÑA = "1234"
 MAX_INTENTOS = 3
 
-CALIFICACION_APROBATORIA = 70
-
 LOGO = r"""
    .-------------------.
   /   N O T A S         \
@@ -24,6 +22,11 @@ LOGO = r"""
  |                        |
   \_______________________/
 """
+
+
+def confirmar(pregunta):
+    respuesta = input(pregunta).strip().lower()
+    return respuesta in ("y", "yes", "s", "si", "sí")
 
 
 def cargar_configuracion():
@@ -113,26 +116,6 @@ def pedir_id():
         return None
 
 
-def calcular_promedio(calificaciones):
-    return sum(calificaciones) / len(calificaciones)
-
-
-def pedir_calificaciones():
-    texto = input("Calificaciones separadas por coma: ")
-    valores = []
-
-    for parte in texto.split(","):
-        parte = parte.strip()
-        if not parte:
-            continue
-        try:
-            valores.append(float(parte))
-        except ValueError:
-            print(f"[!] Valor inválido, se omite: {parte}")
-
-    return valores
-
-
 def agregar_nota(notas):
     print(f"\n{LINEA}\nAgregar nota\n{LINEA}")
     titulo = input("Título: ").strip()
@@ -150,14 +133,6 @@ def agregar_nota(notas):
         "categoria": categoria,
         "fecha_creacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
-
-    if categoria.lower() == "calificaciones":
-        calificaciones = pedir_calificaciones()
-        if calificaciones:
-            promedio = calcular_promedio(calificaciones)
-            nota["calificaciones"] = calificaciones
-            nota["promedio"] = round(promedio, 2)
-            nota["aprobado"] = promedio >= CALIFICACION_APROBATORIA
 
     notas.append(nota)
     guardar_notas(notas)
@@ -190,23 +165,8 @@ def editar_nota(notas):
     if nueva_categoria:
         nota["categoria"] = nueva_categoria
 
-    if nota["categoria"].lower() == "calificaciones":
-        actualizar_calificaciones = confirmar("¿Actualizar calificaciones? (s/n): ")
-        if actualizar_calificaciones:
-            calificaciones = pedir_calificaciones()
-            if calificaciones:
-                promedio = calcular_promedio(calificaciones)
-                nota["calificaciones"] = calificaciones
-                nota["promedio"] = round(promedio, 2)
-                nota["aprobado"] = promedio >= CALIFICACION_APROBATORIA
-
     guardar_notas(notas)
     print("[OK] Nota actualizada.")
-
-
-def confirmar(pregunta):
-    respuesta = input(pregunta).strip().lower()
-    return respuesta in ("y", "yes", "s", "si", "sí")
 
 
 def eliminar_nota(notas):
@@ -230,13 +190,7 @@ def eliminar_nota(notas):
 
 
 def formato_nota(nota):
-    linea = f"[{nota['id']}] {nota['titulo']}  ({nota['categoria']}) - {nota['fecha_creacion']}"
-
-    if "promedio" in nota:
-        estado = "Aprobado" if nota["aprobado"] else "Reprobado"
-        linea += f"\n     Promedio: {nota['promedio']}  -> {estado}"
-
-    return linea
+    return f"[{nota['id']}] {nota['titulo']}  ({nota['categoria']}) - {nota['fecha_creacion']}"
 
 
 def listar_notas(notas):
@@ -280,14 +234,6 @@ def mostrar_estadisticas(notas):
     print("\nNotas por categoría:")
     for categoria, cantidad in conteo_categorias.items():
         print(f"  {categoria}: {cantidad}")
-
-    notas_calificaciones = [nota for nota in notas if "promedio" in nota]
-    if notas_calificaciones:
-        aprobadas = sum(1 for nota in notas_calificaciones if nota["aprobado"])
-        reprobadas = len(notas_calificaciones) - aprobadas
-        print(f"\nNotas de calificaciones: {len(notas_calificaciones)}")
-        print(f"  Aprobadas: {aprobadas}")
-        print(f"  Reprobadas: {reprobadas}")
 
 
 def mostrar_menu():
