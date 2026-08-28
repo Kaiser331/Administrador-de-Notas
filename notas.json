@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "titulo": "Compras del super",
+        "contenido": "Leche, huevo, pan integral",
+        "categoria": "Hogar",
+        "fecha_creacion": "2026-08-28 22:15:25"
+    },
+    {
+        "id": 2,
+        "titulo": "Repasar Git",
+        "contenido": "Revisar comandos add, commit y push",
+        "categoria": "Escuela",
+        "fecha_creacion": "2026-08-28 22:15:25"
+    },
+    {
+        "id": 3,
+        "titulo": "Parcial de Python",
+        "contenido": "",
+        "categoria": "Calificaciones",
+        "fecha_creacion": "2026-08-28 22:15:25",
+        "calificaciones": [
+            85.0,
+            62.0,
+            91.0,
+            55.0
+        ],
+        "promedio": 73.25,
+        "aprobado": true
+    },
+    {
+        "id": 4,
+        "titulo": "Examen final Bases de Datos",
+        "contenido": "",
+        "categoria": "Calificaciones",
+        "fecha_creacion": "2026-08-28 22:15:25",
+        "calificaciones": [
+            55.0,
+            48.0
+        ],
+        "promedio": 51.5,
+        "aprobado": false
+    }
+]
