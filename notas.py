@@ -126,7 +126,13 @@ def guardar_notas(notas):
 def siguiente_id(notas):
     if not notas:
         return 1
-    return max(nota["id"] for nota in notas) + 1
+
+    id_mas_alto = notas[0]["id"]
+    for nota in notas:
+        if nota["id"] > id_mas_alto:
+            id_mas_alto = nota["id"]
+
+    return id_mas_alto + 1
 
 
 def obtener_nota_por_id(notas, id_nota):
@@ -235,12 +241,10 @@ def buscar_nota(notas):
     print(f"\n{LINEA}\nBuscar nota\n{LINEA}")
     texto = input("Palabra clave o categoría: ").strip().lower()
 
-    resultados = [
-        nota for nota in notas
-        if texto in nota["titulo"].lower()
-        or texto in nota["contenido"].lower()
-        or texto in nota["categoria"].lower()
-    ]
+    resultados = []
+    for nota in notas:
+        if texto in nota["titulo"].lower() or texto in nota["contenido"].lower() or texto in nota["categoria"].lower():
+            resultados.append(nota)
 
     if not resultados:
         print("No se encontraron notas.")
