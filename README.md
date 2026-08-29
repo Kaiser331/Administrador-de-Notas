@@ -6,6 +6,10 @@ Programa de consola en Python para crear, editar, eliminar, listar y buscar nota
 
 - Python 3.10 o superior (no usa librerías externas)
 
+## Convención de nombres
+
+Todos los identificadores del código (variables, funciones, llaves de los diccionarios que se guardan en JSON) usan solo letras del alfabeto inglés — sin `ñ` ni acentos — siguiendo la convención habitual en Python. Los textos que ve la persona que usa el programa (menús, mensajes, preguntas) sí están en español normal, con acentos donde corresponde.
+
 ## Cómo ejecutarlo
 
 ```bash
@@ -20,9 +24,13 @@ Por defecto el programa pide una contraseña al abrir (máximo 3 intentos). La c
 1234
 ```
 
-Se puede cambiar editando la constante `CONTRASEÑA` al inicio de `notas.py`.
+Se puede cambiar editando la constante `CONTRASENA` al inicio de `notas.py`, o desde el programa mismo (ver la sección siguiente).
 
 Esta protección se puede **activar o desactivar** desde el menú, opción `7) Activar/desactivar contraseña de inicio`. La preferencia se guarda en `config.json` y se recuerda la próxima vez que se ejecute el programa. Si `config.json` no existe todavía (por ejemplo, la primera vez que se descarga el proyecto), la contraseña está activada por defecto.
+
+## Cambiar la contraseña
+
+La opción `8) Cambiar contraseña` del menú permite reemplazar la contraseña por una a tu gusto. Pide la contraseña actual (para confirmar que eres quien la está cambiando), luego la nueva contraseña dos veces para evitar errores de escritura. La nueva contraseña se guarda en `config.json` y sustituye a la contraseña por defecto (`1234`) desde ese momento en adelante.
 
 ## Menú
 
@@ -47,6 +55,7 @@ SISTEMA DE GESTIÓN DE NOTAS PERSONALES
 5) Buscar nota
 6) Ver estadísticas
 7) Activar/desactivar contraseña de inicio
+8) Cambiar contraseña
 0) Salir
 ──────────────────────────────────────────
 Elige una opción:
@@ -113,6 +122,16 @@ Elige una opción: 7
 La contraseña de inicio está activada.
 ¿Quieres cambiarlo? (s/n): s
 [OK] Contraseña de inicio desactivada.
+```
+
+**Cambiar la contraseña:**
+
+```
+Elige una opción: 8
+Contraseña actual: 1234
+Nueva contraseña: miClave2026
+Confirma la nueva contraseña: miClave2026
+[OK] Contraseña actualizada.
 ```
 
 ## Estructura de una nota

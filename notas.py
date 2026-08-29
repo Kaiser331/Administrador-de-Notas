@@ -8,7 +8,7 @@ ARCHIVO_CONFIG = os.path.join(DIRECTORIO_BASE, "config.json")
 
 LINEA = "─" * 42
 
-CONTRASEÑA = "1234"
+CONTRASENA = "1234"
 MAX_INTENTOS = 3
 
 LOGO = r"""
@@ -31,12 +31,12 @@ def confirmar(pregunta):
 
 def cargar_configuracion():
     if not os.path.exists(ARCHIVO_CONFIG):
-        return {"usar_contraseña": True}
+        return {"usar_contrasena": True}
     try:
         with open(ARCHIVO_CONFIG, mode="r", encoding="utf-8") as archivo:
             return json.load(archivo)
     except (json.JSONDecodeError, FileNotFoundError):
-        return {"usar_contraseña": True}
+        return {"usar_contrasena": True}
 
 
 def guardar_configuracion(config):
@@ -44,28 +44,56 @@ def guardar_configuracion(config):
         json.dump(config, archivo, indent=4, ensure_ascii=False)
 
 
-def cambiar_configuracion_contraseña(config):
+def obtener_contrasena(config):
+    return config.get("contrasena", CONTRASENA)
+
+
+def cambiar_configuracion_contrasena(config):
     print(f"\n{LINEA}\nConfiguración\n{LINEA}")
-    estado_actual = "activada" if config.get("usar_contraseña", True) else "desactivada"
+    estado_actual = "activada" if config.get("usar_contrasena", True) else "desactivada"
     print(f"La contraseña de inicio está {estado_actual}.")
 
     respuesta = confirmar("¿Quieres cambiarlo? (s/n): ")
     if respuesta:
-        config["usar_contraseña"] = not config.get("usar_contraseña", True)
+        config["usar_contrasena"] = not config.get("usar_contrasena", True)
         guardar_configuracion(config)
-        nuevo_estado = "activada" if config["usar_contraseña"] else "desactivada"
+        nuevo_estado = "activada" if config["usar_contrasena"] else "desactivada"
         print(f"[OK] Contraseña de inicio {nuevo_estado}.")
     else:
         print("Sin cambios.")
 
 
-def verificar_acceso():
+def cambiar_contrasena(config):
+    print(f"\n{LINEA}\nCambiar contraseña\n{LINEA}")
+    actual = input("Contraseña actual: ")
+
+    if actual != obtener_contrasena(config):
+        print("[!] Contraseña actual incorrecta.")
+        return
+
+    nueva = input("Nueva contraseña: ").strip()
+    if not nueva:
+        print("[!] La contraseña no puede estar vacía.")
+        return
+
+    confirmacion = input("Confirma la nueva contraseña: ").strip()
+    if nueva != confirmacion:
+        print("[!] Las contraseñas no coinciden.")
+        return
+
+    config["contrasena"] = nueva
+    guardar_configuracion(config)
+    print("[OK] Contraseña actualizada.")
+
+
+def verificar_acceso(config):
     intentos = MAX_INTENTOS
+    contrasena_actual = obtener_contrasena(config)
 
     while intentos > 0:
         clave = input("Contraseña: ")
 
-        if clave == CONTRASEÑA:
+        if clave == contrasena_actual:
             return True
 
         intentos -= 1
@@ -245,6 +273,7 @@ def mostrar_menu():
     print("5) Buscar nota")
     print("6) Ver estadísticas")
     print("7) Activar/desactivar contraseña de inicio")
+    print("8) Cambiar contraseña")
     print("0) Salir")
     print(LINEA)
 
@@ -255,8 +284,8 @@ def main():
 
     config = cargar_configuracion()
 
-    if config.get("usar_contraseña", True):
-        if not verificar_acceso():
+    if config.get("usar_contrasena", True):
+        if not verificar_acceso(config):
             print("\n[!] Acceso denegado.")
             return
         print("\n[OK] Acceso concedido.")
@@ -280,7 +309,9 @@ def main():
         elif opcion == "6":
             mostrar_estadisticas(notas)
         elif opcion == "7":
-            cambiar_configuracion_contraseña(config)
+            cambiar_configuracion_contrasena(config)
+        elif opcion == "8":
+            cambiar_contrasena(config)
         elif opcion == "0":
             print("\nHasta luego.")
             break
